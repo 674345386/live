@@ -30,7 +30,7 @@ import java.util.Random;
 public class MainActivity extends Activity implements RtmpHandler.RtmpListener,
                         SrsRecordHandler.SrsRecordListener, SrsEncodeHandler.SrsEncodeListener {
 
-    private static final String TAG = "Yasea";
+    private static final String TAG = "push";
 
     Button btnPublish = null;
     Button btnSwitchCamera = null;
