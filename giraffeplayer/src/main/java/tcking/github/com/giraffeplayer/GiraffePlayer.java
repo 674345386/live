@@ -63,7 +63,13 @@ public class GiraffePlayer {
     private static final int MESSAGE_HIDE_CENTER_BOX = 4;
     private static final int MESSAGE_RESTART_PLAY = 5;
     private final Activity activity;
+    /**
+     *
+     */
     private final IjkVideoView videoView;
+    /**
+     *
+     */
     private final SeekBar seekBar;
     private final AudioManager audioManager;
     private final int mMaxVolume;
@@ -85,11 +91,13 @@ public class GiraffePlayer {
     private int screenWidthPixels;
 
 
-
+    /**
+     * 按钮监听器
+     */
     private final View.OnClickListener onClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.app_video_fullscreen) {
+            if (v.getId() == R.id.app_video_fullscreen) {       //全屏
                 toggleFullScreen();
             } else if (v.getId() == R.id.app_video_play) {
                 doPauseResume();
@@ -282,6 +290,11 @@ public class GiraffePlayer {
         }
     };
 
+    /**
+     * 构造函数
+     * @param activity  （mainActivity）
+     */
+
     public GiraffePlayer(final Activity activity) {
         try {
             IjkMediaPlayer.loadLibrariesOnce(null);
@@ -294,6 +307,9 @@ public class GiraffePlayer {
         screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
         $=new Query(activity);
         videoView = (IjkVideoView) activity.findViewById(R.id.video_view);
+        /**
+         * 视频播放结束监听器
+         */
         videoView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer mp) {
@@ -321,7 +337,7 @@ public class GiraffePlayer {
                         break;
                     case IMediaPlayer.MEDIA_INFO_NETWORK_BANDWIDTH:
                         //显示 下载速度
-//                        Toaster.show("download rate:" + extra);
+//                        Toast.makeText(,"下载速度"+extra+"kb/s",Toast.LENGTH_LONG).show();
                         break;
                     case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                         statusChange(STATUS_PLAYING);
@@ -538,10 +554,17 @@ public class GiraffePlayer {
         $.id(R.id.app_video_status_text).text(statusText);
     }
 
+    /**
+     * 播放
+     * @param url
+     */
+
     public void play(String url) {
         this.url = url;
         if (playerSupport) {
+            //令播放器中间加载圆圈visible
             $.id(R.id.app_video_loading).visible();
+            //url传给ijkVideoView
             videoView.setVideoPath(url);
             videoView.start();
         }

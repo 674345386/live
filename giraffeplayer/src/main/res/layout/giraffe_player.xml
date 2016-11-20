@@ -2,7 +2,8 @@
 <RelativeLayout
     android:id="@+id/app_video_box"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#000"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#181717"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,7 +23,7 @@
             android:id="@+id/app_video_replay"
             android:gravity="center"
             android:visibility="gone"
-            android:background="#B3616161"
+            android:background="#b3c1acac"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
@@ -172,6 +173,8 @@
             android:indeterminateOnly="true"
             android:visibility="gone"/>
 
+
+        <!--播放下面的空间栏-->
         <RelativeLayout
             android:id="@+id/app_video_bottom_box"
             android:layout_width="match_parent"
@@ -185,16 +188,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:src="@drawable/ic_play_arrow_white_24dp"/>
 
             <TextView
-                android:text="06:21"
+                tools:text="06:06"
                 android:id="@+id/app_video_currentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/app_video_play"
                 android:textColor="@android:color/white"
                 android:textSize="12dp"

@@ -11,22 +11,31 @@ import android.view.Window;
 import android.widget.Toast;
 
 /**
- * Created by tcking on 15/10/27.
+ * Created by CP on 2016/11/16
+ * 此activity 无控件逻辑，控件逻辑位于GiraffePlayer。
+ * Pause(), create(),stop()等操作通过调用player.pause() ,player.stop(),界面相应的反应在GiraffePlayer内
  */
 public class GiraffePlayerActivity extends Activity {
-
+    /**
+     *
+     */
     GiraffePlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        //引入XML，此文件无控件逻辑，在GiraffePlayer 内
         setContentView(R.layout.giraffe_player);
+        //getIntent() 返回打开这个activity的intent
         Config config = getIntent().getParcelableExtra("config");
+
         if (config == null || TextUtils.isEmpty(config.url)) {
             Toast.makeText(this, R.string.giraffe_player_url_empty, Toast.LENGTH_SHORT).show();
         } else {
+            //player
             player = new GiraffePlayer(this);
+            //player从config获取信息，设置
             player.setTitle(config.title);
             player.setDefaultRetryTime(config.defaultRetryTime);
             player.setFullScreenOnly(config.fullScreenOnly);
@@ -61,6 +70,17 @@ public class GiraffePlayerActivity extends Activity {
         }
     }
 
+    /**
+     * 按下back返回键
+     */
+    @Override
+    public void onBackPressed() {
+        if (player != null && player.onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -70,7 +90,7 @@ public class GiraffePlayerActivity extends Activity {
     }
 
     /**
-     * play video
+     * 用来外部播放视频，跳转到Player activity 画面
      *
      * @param context
      * @param url     url,title
@@ -88,6 +108,9 @@ public class GiraffePlayerActivity extends Activity {
         return new Config(activity);
     }
 
+    /**
+     * Config 类，用来存储播放信息，如url
+     */
     public static class Config implements Parcelable {
 
         private Activity activity;
@@ -97,13 +120,36 @@ public class GiraffePlayerActivity extends Activity {
         private String title;
         private String url;
         private boolean showNavIcon = true;
+        private static boolean debug = true;
 
-        private static boolean debug=true;
+        /**
+         * 构造函数
+         *
+         * @param activity
+         */
+        public Config(Activity activity) {
+            this.activity = activity;
+        }
 
-        public  Config debug(boolean debug) {
+
+        /**
+         * 从Config内来播放视频（打开此activity）
+         *
+         * @param url
+         */
+        public void play(String url) {
+            this.url = url;
+            Intent intent = new Intent(activity, GiraffePlayerActivity.class);
+            //把config 对象丢进intent
+            intent.putExtra("config", this);
+            activity.startActivity(intent);
+        }
+
+        public Config debug(boolean debug) {
             Config.debug = debug;
             return this;
         }
+
 
         public static boolean isDebug() {
             return debug;
@@ -112,18 +158,6 @@ public class GiraffePlayerActivity extends Activity {
         public Config setTitle(String title) {
             this.title = title;
             return this;
-        }
-
-
-        public Config(Activity activity) {
-            this.activity = activity;
-        }
-
-        public void play(String url) {
-            this.url = url;
-            Intent intent = new Intent(activity, GiraffePlayerActivity.class);
-            intent.putExtra("config", this);
-            activity.startActivity(intent);
         }
 
         public Config setDefaultRetryTime(long defaultRetryTime) {
@@ -176,11 +210,5 @@ public class GiraffePlayerActivity extends Activity {
         };
     }
 
-    @Override
-    public void onBackPressed() {
-        if (player != null && player.onBackPressed()) {
-            return;
-        }
-        super.onBackPressed();
-    }
+
 }

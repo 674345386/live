@@ -1,0 +1,221 @@
+[1mdiff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml[m
+[1mindex a40136f..3fab262 100644[m
+[1m--- a/app/src/main/AndroidManifest.xml[m
+[1m+++ b/app/src/main/AndroidManifest.xml[m
+[36m@@ -1,22 +1,25 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<manifest xmlns:android="http://schemas.android.com/apk/res/android"[m
+[31m-    package="tcking.github.com.giraffeplayer.example">[m
+[32m+[m[32m<manifest xmlns:tools="http://schemas.android.com/tools"[m
+[32m+[m[32m    package="tcking.github.com.giraffeplayer.example"[m
+[32m+[m[32m          xmlns:android="http://schemas.android.com/apk/res/android">[m
+[32m+[m
+ [m
+ [m
+     <application[m
+         android:allowBackup="true"[m
+[32m+[m[32m        android:label="cp_player"[m
+         android:supportsRtl="true"[m
+[31m-        android:label="视频直播"[m
+         android:theme="@style/AppTheme"[m
+[31m-       >[m
+[32m+[m[32m        tools:replace="android:label">[m
+         <activity[m
+             android:name=".MainActivity"[m
+             android:configChanges="keyboardHidden|orientation|screenSize"[m
+[31m-            android:screenOrientation="sensor">[m
+[32m+[m[32m            android:screenOrientation="sensor"[m
+[32m+[m[32m            >[m
+             <intent-filter>[m
+[31m-                <action android:name="android.intent.action.MAIN" />[m
+[32m+[m[32m                <action android:name="android.intent.action.MAIN"/>[m
+ [m
+[31m-                <category android:name="android.intent.category.LAUNCHER" />[m
+[32m+[m[32m                <category android:name="android.intent.category.LAUNCHER"/>[m
+             </intent-filter>[m
+         </activity>[m
+     </application>[m
+[1mdiff --git a/app/src/main/java/tcking/github/com/giraffeplayer/example/MainActivity.java b/app/src/main/java/tcking/github/com/giraffeplayer/example/MainActivity.java[m
+[1mindex a0f5649..509d7ad 100644[m
+[1m--- a/app/src/main/java/tcking/github/com/giraffeplayer/example/MainActivity.java[m
+[1m+++ b/app/src/main/java/tcking/github/com/giraffeplayer/example/MainActivity.java[m
+[36m@@ -5,8 +5,6 @@[m [mimport android.os.Bundle;[m
+ import android.support.v7.app.AppCompatActivity;[m
+ import android.text.format.Formatter;[m
+ import android.view.View;[m
+[31m-import android.view.Window;[m
+[31m-import android.view.WindowManager;[m
+ import android.widget.EditText;[m
+ import android.widget.TextView;[m
+ import android.widget.Toast;[m
+[36m@@ -21,17 +19,12 @@[m [mpublic class MainActivity extends AppCompatActivity {[m
+     @Override[m
+     protected void onCreate(Bundle savedInstanceState) {[m
+         super.onCreate(savedInstanceState);[m
+[31m-        //去掉标题栏，继承AppCompatActivity，所以无效，用设置NOactionBar theme[m
+[31m-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);[m
+[31m-        //去掉状态栏[m
+[31m-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);[m
+         setContentView(R.layout.activity_main);[m
+[31m-[m
+         player = new GiraffePlayer(this);[m
+         player.onComplete(new Runnable() {[m
+             @Override[m
+             public void run() {[m
+[31m-                //视频播放完成的时候回调[m
+[32m+[m[32m                //callback when video is finish[m
+                 Toast.makeText(getApplicationContext(), "video play completed",Toast.LENGTH_SHORT).show();[m
+             }[m
+         }).onInfo(new GiraffePlayer.OnInfoListener() {[m
+[36m@@ -39,55 +32,47 @@[m [mpublic class MainActivity extends AppCompatActivity {[m
+             public void onInfo(int what, int extra) {[m
+                 switch (what) {[m
+                     case IMediaPlayer.MEDIA_INFO_BUFFERING_START:[m
+[31m-                        Toast.makeText(MainActivity.this,"开始缓冲",Toast.LENGTH_LONG).show();[m
+[32m+[m[32m                        //do something when buffering start[m
+                         break;[m
+                     case IMediaPlayer.MEDIA_INFO_BUFFERING_END:[m
+[31m-                        Toast.makeText(MainActivity.this,"缓冲结束",Toast.LENGTH_LONG).show();[m
+[32m+[m[32m                        //do something when buffering end[m
+                         break;[m
+                     case IMediaPlayer.MEDIA_INFO_NETWORK_BANDWIDTH:[m
+[31m-                        //刷新显示下载速度[m
+[32m+[m[32m                        //download speed[m
+                         ((TextView) findViewById(R.id.tv_speed)).setText(Formatter.formatFileSize(getApplicationContext(),extra)+"/s");[m
+[31m-                        Toast.makeText(MainActivity.this,"网速:"+extra+"kb/s",Toast.LENGTH_SHORT).show();[m
+                         break;[m
+                     case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:[m
+                         //do something when video rendering[m
+[31m-//                        findViewById(R.id.tv_speed).setVisibility(View.GONE);[m
+[32m+[m[32m                        findViewById(R.id.tv_speed).setVisibility(View.GONE);[m
+                         break;[m
+                 }[m
+             }[m
+         }).onError(new GiraffePlayer.OnErrorListener() {[m
+             @Override[m
+             public void onError(int what, int extra) {[m
+[31m-                Toast.makeText(getApplicationContext(), "视频播放错误",Toast.LENGTH_SHORT).show();[m
+[32m+[m[32m                Toast.makeText(getApplicationContext(), "video play error",Toast.LENGTH_SHORT).show();[m
+             }[m
+         });[m
+[31m-        /**[m
+[31m-         * 按钮监听[m
+[31m-         */[m
+         View.OnClickListener clickListener = new View.OnClickListener() {[m
+             @Override[m
+             public void onClick(View v) {[m
+[31m-                //播放[m
+                 if (v.getId() == R.id.btn_play) {[m
+                     String url = ((EditText) findViewById(R.id.et_url)).getText().toString();[m
+                     player.play(url);[m
+                     player.setTitle(url);[m
+                 } else if (v.getId() == R.id.btn_play_sample_1) {[m
+[31m-                    //m3u8[m
+                     String url = "http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";[m
+                     ((EditText) findViewById(R.id.et_url)).setText(url);[m
+                     player.play(url);[m
+                     player.setTitle(url);[m
+                 } else if (v.getId() == R.id.btn_play_sample_2) {[m
+[31m-                    //mp4[m
+                     String url = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";[m
+                     ((EditText) findViewById(R.id.et_url)).setText(url);[m
+                     player.play(url);[m
+                     player.setTitle(url);[m
+[31m-                    //左上角返回导航图标[m
+                     player.setShowNavIcon(false);[m
+                 }else if (v.getId() == R.id.btn_play_sample_3) {[m
+[31m-                    String url = "";[m
+[32m+[m[32m                    String url = "https://r13---sn-o097znes.googlevideo.com/videoplayback?mt=1455852432&mv=m&ms=au&source=youtube&key=yt6&requiressl=yes&mm=31&mn=sn-o097znes&initcwndbps=16485000&id=o-AEGdeTbgSTzVGqwV2s8MjH5mlDPz3APWVwGfftr9GDqy&upn=D3A5w5WYU1k&lmt=1410665930307178&ip=2600:3c01::f03c:91ff:fe70:35ff&sparams=dur,id,initcwndbps,ip,ipbits,itag,lmt,mime,mm,mn,ms,mv,nh,pl,ratebypass,requiressl,source,upn,expire&fexp=9416126,9420452,9422596,9423341,9423661,9423662,9424038,9424862,9425077,9425730,9426472,9426698,9427379,9428544,9428649,9429218,9429237,9429435,9429589&pl=32&dur=106.370&sver=3&expire=1455874197&nh=IgpwcjAxLnNqYzA3KgkxMjcuMC4wLjE&ratebypass=yes&mime=video/mp4&itag=18&signature=22C4633FCD1259D5F6CD1E0B54AB649982895534.378BAAC5AFAAEA737246C5CE5B92212E40B765BD&ipbits=0";[m
+                     ((EditText) findViewById(R.id.et_url)).setText(url);[m
+                     player.play(url);[m
+                     player.setTitle(url);[m
+[1mdiff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml[m
+[1mindex 5e655a6..5fba43d 100644[m
+[1m--- a/app/src/main/res/layout/activity_main.xml[m
+[1m+++ b/app/src/main/res/layout/activity_main.xml[m
+[36m@@ -21,7 +21,6 @@[m
+             android:layout_height="wrap_content">[m
+             <TextView[m
+                 android:id="@+id/tv_speed"[m
+[31m-                android:text="250kb/s"[m
+                 android:layout_width="wrap_content"[m
+                 android:layout_height="wrap_content"/>[m
+             <LinearLayout[m
+[36m@@ -54,16 +53,15 @@[m
+                 android:layout_height="wrap_content">[m
+                 <Button[m
+                     android:id="@+id/btn_pause"[m
+[31m-                    android:text="停止"[m
+[32m+[m[32m                    android:text="pause"[m
+                     android:layout_width="wrap_content"[m
+                     android:layout_height="wrap_content"/>[m
+                 <Button[m
+                     android:id="@+id/btn_start"[m
+[31m-                    android:text="开始"[m
+[32m+[m[32m                    android:text="start"[m
+                     android:layout_width="wrap_content"[m
+                     android:layout_height="wrap_content"/>[m
+                 <Button[m
+[31m-                    android:visibility="gone"[m
+                     android:id="@+id/btn_toggle"[m
+                     android:text="toggleFullScreen"[m
+                     android:layout_width="wrap_content"[m
+[36m@@ -73,8 +71,7 @@[m
+ [m
+             <LinearLayout[m
+                 android:layout_width="match_parent"[m
+[31m-                android:layout_height="wrap_content"[m
+[31m-                android:visibility="gone">[m
+[32m+[m[32m                android:layout_height="wrap_content">[m
+                 <Button[m
+                     android:id="@+id/btn_forward"[m
+                     android:text="forward"[m
+[36m@@ -94,26 +91,22 @@[m
+             </LinearLayout>[m
+ [m
+             <Button[m
+[31m-                android:visibility="gone"[m
+                 android:id="@+id/btn_play_sample_1"[m
+                 android:text="play sample 1"[m
+                 android:layout_width="wrap_content"[m
+                 android:layout_height="wrap_content"/>[m
+             <Button[m
+[31m-                android:visibility="gone"[m
+                 android:id="@+id/btn_play_sample_2"[m
+                 android:text="play sample 2"[m
+                 android:layout_width="wrap_content"[m
+                 android:layout_height="wrap_content"/>[m
+             <Button[m
+[31m-                android:visibility="gone"[m
+                 android:id="@+id/btn_play_sample_3"[m
+                 android:text="play sample 3(https)"[m
+                 android:layout_width="wrap_content"[m
+                 android:layout_height="wrap_content"/>[m
+ [m
+             <Button[m
+[31m-                android:visibility="gone"[m
+                 android:id="@+id/btn_open"[m
+                 android:text="play by out of the box player"[m
+                 android:layout_width="wrap_content"[m
+[1mdiff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml[m
+[1mindex 23d78b1..3ab3e9c 100644[m
+[1m--- a/app/src/main/res/values/colors.xml[m
+[1m+++ b/app/src/main/res/values/colors.xml[m
+[36m@@ -1,6 +1,6 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+ <resources>[m
+[31m-    <color name="colorPrimary">#b383ae</color>[m
+[31m-    <color name="colorPrimaryDark">#b383ae</color>[m
+[32m+[m[32m    <color name="colorPrimary">#3F51B5</color>[m
+[32m+[m[32m    <color name="colorPrimaryDark">#303F9F</color>[m
+     <color name="colorAccent">#FF4081</color>[m
+ </resources>[m
+[1mdiff --git a/app/src/main/res/values/styles.xml b/app/src/main/res/values/styles.xml[m
+[1mindex df6a874..5885930 100644[m
+[1m--- a/app/src/main/res/values/styles.xml[m
+[1m+++ b/app/src/main/res/values/styles.xml[m
+[36m@@ -8,8 +8,4 @@[m
+         <item name="colorAccent">@color/colorAccent</item>[m
+     </style>[m
+ [m
+[31m-    <style name="AppTheme_2" parent=

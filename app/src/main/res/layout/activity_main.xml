@@ -62,6 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <Button
+                    android:visibility="gone"
                     android:id="@+id/btn_toggle"
                     android:text="toggleFullScreen"
                     android:layout_width="wrap_content"
@@ -70,9 +71,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <Button
+
                     android:id="@+id/btn_forward"
                     android:text="forward"
                     android:layout_width="wrap_content"
@@ -91,22 +94,26 @@
             </LinearLayout>
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_play_sample_1"
                 android:text="play sample 1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_play_sample_2"
                 android:text="play sample 2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_play_sample_3"
                 android:text="play sample 3(https)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_open"
                 android:text="play by out of the box player"
                 android:layout_width="wrap_content"

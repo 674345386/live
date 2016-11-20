@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="tcking.github.com.giraffeplayer.example"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    package="tcking.github.com.giraffeplayer.example"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
 
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="cp_player"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
