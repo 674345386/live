@@ -16,7 +16,9 @@ android {
         }
     }
     buildTypes {
+
         release {
+            applicationIdSuffix ".second"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements RtmpHandler.RtmpListener,
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_push);
 
         // response screen rotation event
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
